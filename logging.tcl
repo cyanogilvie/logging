@@ -5,12 +5,19 @@ namespace eval logging {
 		set levelmap	{
 			trivia		5
 			debug		10
+			LOG_DEBUG	10
 			notify		20
 			notice		20
+			LOG_INFO	20
 			warning		30
 			warn		30
+			LOG_WARNING	30
 			error		40
+			LOG_ERR		40
 			fatal		50
+			LOG_CRIT	50
+			LOG_ALERT	50
+			LOG_EMERG	50
 		}
 		if {[dict exists $levelmap $loglevel]} {
 			set loglevel	[dict get $levelmap $loglevel]
@@ -21,9 +28,6 @@ namespace eval logging {
 		namespace eval $name [list variable loglevel $loglevel]
 		namespace eval $name [list variable levelmap $levelmap]
 		namespace eval $name {
-			namespace export *
-			namespace ensemble create
-
 			proc _n {l} { #<<<
 				set fg	"bright white"
 				if {$l >= 40} {
@@ -84,7 +88,10 @@ namespace eval logging {
 				} else {
 					proc $name {args} {}
 				}
+				namespace export $name
 			}
+
+			namespace ensemble create
 		}
 	}
 }
