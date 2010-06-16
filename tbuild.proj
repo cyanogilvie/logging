@@ -1,0 +1,14 @@
+tm "logging" {
+	version 0.1
+
+	requires {
+	}
+
+	files {
+		logging.tcl
+	}
+
+	platform tcl
+}
+
+# vim: ft=tcl
