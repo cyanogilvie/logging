@@ -38,8 +38,9 @@ namespace eval logging {
 					set bg	blue
 				} elseif {$l >= 10} {
 					set bg	blue
-					set fg	yellow
+					set fg	"bright yellow"
 				} else {
+					set fg	"white"
 					set bg	none
 				}
 				concat bg_$bg $fg
