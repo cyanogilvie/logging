@@ -1,7 +1,7 @@
 # vim: ft=tcl foldmethod=marker foldmarker=<<<,>>> ts=4 shiftwidth=4
 
 namespace eval logging {
-	proc logger {name loglevel} {
+	proc logger {name loglevel args} {
 		set levelmap	{
 			trivia		5
 			debug		10
@@ -25,8 +25,18 @@ namespace eval logging {
 		if {![string is integer -strict $loglevel]} {
 			error "loglevel must be an integer or one of [join [dict keys $levelmap] {, }]"
 		}
+		set params	[dict create \
+				hook		"" \
+		]
+		dict for {k v} $args {
+			if {[string index $k 0] eq "-"} {
+				set k	[string range $k 1 end]
+			}
+			dict set params $k $v
+		}
 		namespace eval $name [list variable loglevel $loglevel]
 		namespace eval $name [list variable levelmap $levelmap]
+		namespace eval $name [list variable params $params]
 		namespace eval $name {
 			proc _n {l} { #<<<
 				set fg	"bright white"
@@ -84,8 +94,9 @@ namespace eval logging {
 
 			dict for {name int} $levelmap {
 				if {$int >= $loglevel} {
+					set hook	[string map [list %level% $name] [dict get $params hook]]\n
 					proc $name {msg args} \
-							[format {puts %s${msg}%s} [_c {*}[_n $int]] [_c norm]]
+							[format {%sputs %s${msg}%s} $hook [_c {*}[_n $int]] [_c norm]]
 				} else {
 					proc $name {args} {}
 				}
