@@ -27,6 +27,7 @@ namespace eval logging {
 		}
 		set params	[dict create \
 				hook		"" \
+				cmd			"puts" \
 		]
 		dict for {k v} $args {
 			if {[string index $k 0] eq "-"} {
@@ -96,7 +97,7 @@ namespace eval logging {
 				if {$int >= $loglevel} {
 					set hook	[string map [list %level% $name] [dict get $params hook]]\n
 					proc $name {msg args} \
-							[format {%sputs %s${msg}%s} $hook [_c {*}[_n $int]] [_c norm]]
+							[format {%s%s %s${msg}%s} $hook [dict get $params cmd] [_c {*}[_n $int]] [_c norm]]
 				} else {
 					proc $name {args} {}
 				}
