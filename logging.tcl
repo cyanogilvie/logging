@@ -96,8 +96,9 @@ namespace eval logging {
 			dict for {name int} $levelmap {
 				if {$int >= $loglevel} {
 					set hook	[string map [list %level% $name] [dict get $params hook]]\n
+					set cmd		[string map [list %level% $name] [dict get $params cmd]]
 					proc $name {msg args} \
-							[format {%s%s %s${msg}%s} $hook [dict get $params cmd] [_c {*}[_n $int]] [_c norm]]
+							[format {%s%s %s${msg}%s} $hook $cmd [_c {*}[_n $int]] [_c norm]]
 				} else {
 					proc $name {args} {}
 				}
